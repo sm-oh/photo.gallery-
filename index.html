@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제이쿼리 문서객체조작을 활용한 이미지 갤러리</title>
+    <!-- 초기화 -->
+    <link rel="stylesheet" href="./css/reset.css">
+
+    <!-- 갤러리 서식 -->
+    <link rel="stylesheet" href="./css/gallery.css">
+    
+    <!-- 아이콘 폰트 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            //1. 이미지 캡션
+            let g_img = $('.g_list li');
+
+            //2. 이미지에 마우스오버시 캡션이 나오게 / 아웃시 다시 아래로 숨기기
+            g_img.hover(function(){
+                $(this).find('.caption').stop().animate({'bottom':'0px'},300);
+            },function(){
+                $(this).find('.caption').stop().animate({'bottom':'-40px'},300);
+            });
+
+            // 3. 이미지 클릭시 해당 목록 안ㄴ에 이미지src속성값을 변수에 담아 모달윈도에 출력한다.
+            g_img.click(function(){
+                let img_url = $(this).find('a').attr('href');
+                console.log(img_url);//이미지 주소를 출력해본다
+                let modal = `
+                    <div class="modal">
+                        <div>
+                            <h3>${title}</h3>
+                            <i class="fas fa-times"></i>
+                            <img src='${img_url}' alt="">
+                            <i class="fas fa-angle-left"</i>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                `;
+
+                $('body').append(modal);
+
+                $('.modal i.fa-times').click(function(){
+                    if(num==12){
+                        num=1;
+                    }else{
+                        num--;
+                    }
+                    $('.page').html(num+'/12');
+                    $('.modal').fadeOut('fast');
+                });
+
+                return false;//이미지 안열리게..
+            });
+
+
+
+            // 갤러리 메뉴 변수
+            let total_mnu = $('.g_nav li:first-child a');
+            let plan_mnu = $('.g_nav li:nth-child(2) a');
+            let design_mnu = $('.g_nav li:nth-child(3) a');
+            let ui_mnu = $('.g_nav li:nth-child(4) a');
+            let coding_mnu = $('.g_nav li:last-child a');
+
+            total_mnu.click(function(){
+                $('.total').hide();
+                $('.total').fadeIn();
+            });
+            
+            plan_mnu.click(function(){
+                $('.total').hide();
+                $('.plan').fadeIn();
+            });
+
+            design_mnu.click(function(){
+                $('.total').hide();
+                $('.design').fadeIn();
+            });
+
+            ui_mnu.click(function(){
+                $('.total').hide();
+                $('.ui').fadeIn();
+            });
+
+            coding_mnu.click(function(){
+                $('.total').hide();
+                $('.coding').fadeIn();
+            });
+            
+            // 내가 선택한 메뉴에만 act서식을 추가하여 메뉴배경색을 변경한다.
+            $('.g_nav ul li a').click(function(){
+                $(this).addClass('act').parent().siblings().find('a').removeClass('act');
+
+                return false;//a의 #때문에 페이지가 새로고침 되는 것을 방지한다.
+            });
+
+
+
+        });
+    </script>
+
+</head>
+<body>
+    <h2>03제이쿼리 문서객체조작을 활용한 이미지 갤러리</h2>
+    <p>12장의 이미지를 사용하여 갤러리 페이지 구현하기</p>
+    <p>1. 내비게이션 메뉴 5개를 만들고 12장의 이미지를 목록태그를 사용하여 가로 4개씩 배치한다.</p>
+    <p>2. 메뉴클릭시 해당 주제에 맞는 이밎 목록만 화면에 보이게 한다.(정렬기능)</p>
+    <p>3. 메뉴클릭시 해당 메뉴에만 배경서식이 추가되도록 adClass를 사용한다.</p>
+    <p>4. 갤러리 이미지에 마우스 오버시 '캡션'제목이 표시되도록 한다.(css, jquery둘다가능)</p>
+    <p>5. 갤러리 이미지 클릭시 해당 이미지의 src값을 가져와서 modal윈도우가 뜨도록 한다.</p>
+    <p>6. 모달윈도우에서 닫기 버튼클릭시 사라지도록 한다.</p>
+    <p>7. 모달윈도우에서 해당 이미지의 아래쪽에 캡션내용이 나오도록 한다.</p>
+    <p>8. 모달윈도우에서 해당 이미지의 아래쪽에 페이지 번호가 나오도록 한다.</p>
+    <p>9. 모달윈도우에서 좌, 우버튼 클릭시 해당 사진이 나오며, 페이지 번호도 변경되도록 한다. (1.12)</p>
+    <p>10. 이미지에 마우스 오버시 마우스 포인터 모양이 변하도록 한다.</p>
+    <p>11. 이미지에 마우스 오버시 이미지에 효과애니메이션을 적용한다.</p>
+
+    <main>
+        <section class="gallery">
+            <h2>포트폴리오 갤러리</h2>
+            <nav class="g_nav">
+                <ul>
+                    <li><a href="#" title="전체보기" class="act">전체보기</a></li>
+                    <li><a href="#" title="기획">기획</a></li>
+                    <li><a href="#" title="설계">설계</a></li>
+                    <li><a href="#" title="UI/UX 디자인">UI/UX 디자인</a></li>
+                    <li><a href="#" title="구현">구현</a></li>
+                </ul>
+            </nav>
+            <!-- 기획(plan) : 1,5,10
+            설계(design) : 3,6
+            디자인(ui): 2,4,7,8,12
+            개발(coding) : 9,11 -->
+            <ul class="g_list">
+                <li class="total plan">
+                    <a href="./images/img1.jpg" title="기획">
+                        <img src="./images/img1.jpg" alt="기획">
+                        <span class="caption">기획</span>
+                    </a>
+                </li>
+
+                <li class="total ui">
+                    <a href="./images/img2.jpg" title="디자인">
+                        <img src="./images/img2.jpg" alt="디자인">
+                        <span class="caption">디자인</span>
+                    </a>
+                </li>
+
+                <li class="total design">
+                    <a href="./images/img3.jpg" title="설계">
+                        <img src="./images/img3.jpg" alt="설계">
+                        <span class="caption">설계</span>
+                    </a>
+                </li>
+
+                <li class="total ui">
+                    <a href="./images/img4.png" title="디자인">
+                        <img src="./images/img4.png" alt="디자인">
+                        <span class="caption">디자인</span>
+                    </a>
+                </li>
+
+                <li class="total plan">
+                    <a href="./images/img5.jpg" title="기획">
+                        <img src="./images/img5.jpg" alt="기획">
+                        <span class="caption">기획</span>
+                    </a>
+                </li>
+
+                <li class="total design">
+                    <a href="./images/img6.jpg" title="설계">
+                        <img src="./images/img6.jpg" alt="설계">
+                        <span class="caption">설계</span>
+                    </a>
+                </li>
+
+                <li class="total ui">
+                    <a href="./images/img7.jpg" title="디자인">
+                        <img src="./images/img7.jpg" alt="디자인">
+                        <span class="caption">디자인</span>
+                    </a>
+                </li>
+
+                <li class="total ui">
+                    <a href="./images/img8.jpg" title="디자인">
+                        <img src="./images/img8.jpg" alt="디자인">
+                        <span class="caption">디자인</span>
+                    </a>
+                </li>
+
+                <li class="total coding">
+                    <a href="./images/img9.png" title="개발">
+                        <img src="./images/img9.png" alt="개발">
+                        <span class="caption">개발</span>
+                    </a>
+                </li>
+
+                <li class="total plan">
+                    <a href="./images/img10.jpg" title="기획">
+                        <img src="./images/img10.jpg" alt="기획">
+                        <span class="caption">기획</span>
+                    </a>
+                </li>
+
+                <li class="total coding">
+                    <a href="./images/img11.png" title="개발">
+                        <img src="./images/img11.png" alt="개발">
+                        <span class="caption">개발</span>
+                    </a>
+                </li>
+
+                <li class="total ui">
+                    <a href="./images/img12.jpg" title="디자인">
+                        <img src="./images/img12.jpg" alt="디자인">
+                        <span class="caption">디자인</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
